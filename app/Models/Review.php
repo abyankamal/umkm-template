@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cart extends Model
+class Review extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
+        'product_id',
+        'rating',
+        'comment',
     ];
 
     public function user()
@@ -18,15 +21,13 @@ class Cart extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function cartItems()
+    public function product()
     {
-        return $this->hasMany(CartItem::class);
+        return $this->belongsTo(Product::class);
     }
 
-    public function getTotalPriceAttribute()
+    public function setRatingAttribute($value)
     {
-        return $this->cartItems->sum(function ($item) {
-            return $item->productVariant->price * $item->quantity;
-        });
+        $this->attributes['rating'] = max(1, min(5, $value));
     }
 }
