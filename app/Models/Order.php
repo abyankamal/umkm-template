@@ -13,6 +13,8 @@ class Order extends Model
         'user_id',
         'total_amount',
         'status',
+        'voucher_id',
+        'total_discount'
     ];
 
     public function user()
@@ -43,5 +45,23 @@ class Order extends Model
     public function scopeFilterByDateRange($query, $startDate, $endDate)
     {
         return $query->whereBetween('created_at', [$startDate, $endDate]);
+    }
+
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class);
+    }
+
+    public function applyVoucher(Voucher $voucher)
+    {
+        $discount = $voucher->calculateDiscount($this->total_amount);
+
+        $this->update([
+            'voucher_id' => $voucher->id,
+            'total_discount' => $discount,
+            'total_amount' => $this->total_amount - $discount
+        ]);
+
+        $voucher->increment('used_count');
     }
 }

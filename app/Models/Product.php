@@ -47,4 +47,33 @@ class Product extends Model
     {
         return $this->variants()->exists();
     }
+
+    public function getDiscountedPriceAttribute()
+    {
+        if ($this->isDiscountValid()) {
+            return $this->calculateDiscount();
+        }
+        return $this->price;
+    }
+
+    protected function isDiscountValid()
+    {
+        $now = now();
+        return $this->discount_value &&
+            $this->discount_start <= $now &&
+            $this->discount_end >= $now;
+    }
+
+    protected function calculateDiscount()
+    {
+        if ($this->discount_type === 'percentage') {
+            return $this->price * (1 - ($this->discount_value / 100));
+        }
+        return max(0, $this->price - $this->discount_value);
+    }
+
+    public function vouchers()
+    {
+        return $this->belongsToMany(Voucher::class);
+    }
 }

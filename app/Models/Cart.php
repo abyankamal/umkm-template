@@ -29,4 +29,26 @@ class Cart extends Model
             return $item->productVariant->price * $item->quantity;
         });
     }
+
+    public function calculateTotal()
+    {
+        $subtotal = $this->cartItems->sum('subtotal');
+        $discount = 0;
+
+        if ($this->voucher) {
+            $applicableItems = $this->cartItems->filter(
+                fn($item) =>
+                $this->voucher->isValidFor($item->product_variant->product)
+            );
+
+            $applicableAmount = $applicableItems->sum('subtotal');
+            $discount = $this->voucher->calculateDiscount($applicableAmount);
+        }
+
+        return [
+            'subtotal' => $subtotal,
+            'discount' => $discount,
+            'total' => max(0, $subtotal - $discount)
+        ];
+    }
 }

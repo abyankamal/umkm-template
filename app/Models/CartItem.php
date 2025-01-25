@@ -24,4 +24,14 @@ class CartItem extends Model
     {
         return $this->belongsTo(ProductVariant::class);
     }
+
+    public function getPriceAttribute()
+    {
+        return $this->product_variant->product->discounted_price;
+    }
+
+    public function getSubtotalAttribute()
+    {
+        return $this->price * $this->quantity;
+    }
 }
