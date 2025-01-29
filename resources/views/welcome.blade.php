@@ -18,7 +18,7 @@
     @endif
 </head>
 
-<body class="bg-kutamis-purple min-h-screen flex flex-col">
+<body class="bg-kutamis-purple min-h-4 flex flex-col">
     <div class="flex-1">
         <!-- Your page content goes here -->
         <p>Children</p>
