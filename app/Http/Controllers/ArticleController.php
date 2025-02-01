@@ -1,9 +1,11 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
@@ -39,7 +41,9 @@ class ArticleController extends Controller
         ]);
 
         $article = new Article($validated);
-        $article->author_id = auth()->id();
+
+        // Corrected authentication ID access
+        $article->author_id = Auth::id(); // Changed from auth()->id()
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('articles', 'public');
