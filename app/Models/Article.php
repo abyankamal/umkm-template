@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 class Article extends Model
@@ -37,6 +38,16 @@ class Article extends Model
             $slug = $slug . '-' . Str::random(5);
         }
         $this->slug = $slug;
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(ArticleCategory::class, 'article_article_category');
+    }
+
+    public function getCategoryNamesAttribute()
+    {
+        return $this->categories->pluck('name')->join(', ');
     }
 
     protected static function boot()

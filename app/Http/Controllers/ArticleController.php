@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticleCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -24,11 +25,12 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        return view('articles.create');
+        $categories = ArticleCategory::all();
+        return view('articles.create', compact('categories'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in Y{storage.
      */
     public function store(Request $request)
     {
@@ -37,7 +39,8 @@ class ArticleController extends Controller
             'content' => 'required',
             'image' => 'image|mimes:jpeg,png,jpg|max:2048',
             'status' => 'required|in:draft,published',
-            'published_at' => 'nullable|date'
+            'published_at' => 'nullable|date',
+            'category_id' => 'required|exists:categories,id'
         ]);
 
         $article = new Article($validated);
@@ -51,6 +54,7 @@ class ArticleController extends Controller
         }
 
         $article->generateSlug();
+        $article->categories()->sync($request->input('article_categories'));
         $article->save();
 
         return redirect()->route('articles.index')->with('success', 'Artikel berhasil dibuat');
@@ -69,7 +73,8 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        return view('articles.edit', compact('article'));
+        $categories = ArticleCategory::all();
+        return view('articles.edit', compact('article', 'categories'));
     }
 
     /**
