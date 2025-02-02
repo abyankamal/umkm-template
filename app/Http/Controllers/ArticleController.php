@@ -54,7 +54,7 @@ class ArticleController extends Controller
         }
 
         $article->generateSlug();
-        $article->categories()->sync($request->input('article_categories'));
+        $article->categories()->sync($request->category_id);
         $article->save();
 
         return redirect()->route('articles.index')->with('success', 'Artikel berhasil dibuat');
