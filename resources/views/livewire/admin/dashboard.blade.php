@@ -70,18 +70,19 @@
         </div>
     </div>
 
-    @push('scripts')
+    @script
     <script>
         let salesChart;
         let categoryChart;
 
         // Inisialisasi Chart
-        document.addEventListener('livewire:initialized', function() {
-            initCharts(@json($salesChart), @json($categoryChart));
+        document.addEventListener('livewire:initialized', () => {
+            // Access data through Livewire's $wire
+            initCharts($wire.salesChart, $wire.categoryChart);
         });
 
         // Update Chart ketika data berubah
-        document.addEventListener('chartUpdated', function(event) {
+        document.addEventListener('chartUpdated', (event) => {
             updateCharts(event.detail.salesData, event.detail.categoryData);
         });
 
@@ -100,12 +101,7 @@
                     }]
                 },
                 options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    }
+                    /* ... */
                 }
             });
 
@@ -117,22 +113,11 @@
                     labels: categoryData.labels,
                     datasets: [{
                         data: categoryData.data,
-                        backgroundColor: [
-                            'rgb(59, 130, 246)',
-                            'rgb(16, 185, 129)',
-                            'rgb(245, 158, 11)',
-                            'rgb(239, 68, 68)',
-                            'rgb(139, 92, 246)'
-                        ]
+                        backgroundColor: [ /* ... */ ]
                     }]
                 },
                 options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    }
+                    /* ... */
                 }
             });
         }
@@ -147,5 +132,5 @@
             categoryChart.update();
         }
     </script>
-    @endpush
+    @endscript
 </div>
