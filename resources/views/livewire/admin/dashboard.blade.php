@@ -25,7 +25,7 @@
             <option value="30">30 Hari Terakhir</option>
             <option value="90">90 Hari Terakhir</option>
         </select>
-    </div>
+    </div>.
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <!-- Grafik Penjualan -->
