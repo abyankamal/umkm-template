@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('subtitle')->nullable();
             $table->string('image');
             $table->string('url')->nullable();
+            $table->foreignId('voucher_id')->nullable()->constrained()->onDelete('set null');
             $table->boolean('is_active')->default(true);
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
