@@ -6,7 +6,7 @@ use Livewire\Component;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 
-#[Layout('layout.admin')]
+#[Layout('livewire.layouts.admin-layout')]
 class Dashboard extends Component
 {
     public $totalRevenue;
