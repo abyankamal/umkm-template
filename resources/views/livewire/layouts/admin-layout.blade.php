@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 flex flex-col min-h-screen">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
         <livewire:layouts.admin-sidebar />
@@ -19,9 +19,12 @@
             <!-- Header -->
 
             <!-- Page Content -->
-            <main class="p-6">
+            <main class="p-6 flex-grow">
                 {{ $slot }}
             </main>
+
+            <!-- Footer -->
+            <livewire:layouts.admin-footer />
         </div>
     </div>
 
