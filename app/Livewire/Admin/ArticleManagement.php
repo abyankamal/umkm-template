@@ -6,10 +6,12 @@ use App\Models\Article;
 use App\Models\ArticleCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
+#[Layout('livewire.layouts.admin-layout')]
 class ArticleManagement extends Component
 {
     use WithPagination, WithFileUploads;

@@ -3,9 +3,11 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Order;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Layout('livewire.layouts.admin-layout')]
 class OrderManagement extends Component
 {
     use WithPagination;
