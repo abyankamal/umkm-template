@@ -6,7 +6,7 @@
 
         <nav class="space-y-2">
             <ul>
-                <li>
+                <li class="mb-2">
                     <a wire:navigate href="{{ route('admin.dashboard') }}"
                         class="flex items-center space-x-2 py-2 px-4 rounded-lg text-gray-700 hover:bg-kutamis-purple hover:text-white {{ request()->routeIs('admin.dashboard') ? 'bg-kutamis-purple text-white' : '' }}">
                         <svg class="w-5 h-5 text-gray-500 {{ request()->routeIs('admin.dashboard') ? 'text-white' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,7 +15,7 @@
                         <span class="ml-3">Dashboard</span>
                     </a>
                 </li>
-                <li>
+                <li class="mb-2">
                     <a wire:navigate href="{{ route('admin.products') }}"
                         class="flex items-center space-x-2 py-2 px-4 rounded-lg text-gray-700 hover:bg-kutamis-purple hover:text-white {{ request()->routeIs('admin.products') ? 'bg-kutamis-purple text-white' : '' }}">
                         <svg class="w-5 h-5 text-gray-500 {{ request()->routeIs('admin.products') ? 'text-white' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,7 +24,7 @@
                         <span class="ml-3">Produk</span>
                     </a>
                 </li>
-                <li>
+                <li class="mb-2">
                     <a wire:navigate href="{{ route('admin.orders') }}"
                         class="flex items-center space-x-2 py-2 px-4 rounded-lg text-gray-700 hover:bg-kutamis-purple hover:text-white {{ request()->routeIs('admin.orders') ? 'bg-kutamis-purple text-white' : '' }}">
                         <svg class="w-5 h-5 text-gray-500 {{ request()->routeIs('admin.orders') ? 'text-white' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,7 +33,7 @@
                         <span class="ml-3">Pesanan</span>
                     </a>
                 </li>
-                <li>
+                <li class="mb-2">
                     <a wire:navigate href="{{ route('admin.articles') }}"
                         class="flex items-center space-x-2 py-2 px-4 rounded-lg text-gray-700 hover:bg-kutamis-purple hover:text-white {{ request()->routeIs('admin.articles') ? 'bg-kutamis-purple text-white' : '' }}">
                         <svg class="w-5 h-5 text-gray-500 {{ request()->routeIs('admin.articles') ? 'text-white' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
