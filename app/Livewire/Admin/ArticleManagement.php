@@ -10,12 +10,14 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Storage;
 
 #[Layout('livewire.layouts.admin-layout')]
 class ArticleManagement extends Component
 {
     use WithPagination, WithFileUploads;
 
+    // Form Properties
     public $title;
     public $content;
     public $status = 'draft';
@@ -24,8 +26,17 @@ class ArticleManagement extends Component
     public $categories = [];
     public $selectedCategories = [];
 
+    // UI State
+    public $showForm = false;
     public $isEditing = false;
     public $showDeleteModal = false;
+
+    // Filter and Sort
+    public $search = '';
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
+    public $statusFilter = '';
+    public $categoryFilter = '';
 
     protected $rules = [
         'title' => 'required|min:3|max:255',
@@ -42,9 +53,24 @@ class ArticleManagement extends Component
 
     public function render()
     {
-        $articles = Article::with('author')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $query = Article::with(['author', 'categories'])
+            ->when($this->search, function($query) {
+                $query->where(function($q) {
+                    $q->where('title', 'like', '%' . $this->search . '%')
+                      ->orWhere('content', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->when($this->statusFilter, function($query) {
+                $query->where('status', $this->statusFilter);
+            })
+            ->when($this->categoryFilter, function($query) {
+                $query->whereHas('categories', function($q) {
+                    $q->where('id', $this->categoryFilter);
+                });
+            })
+            ->orderBy($this->sortField, $this->sortDirection);
+
+        $articles = $query->paginate(10);
 
         return view('livewire.admin.article-management', [
             'articles' => $articles,
@@ -56,40 +82,41 @@ class ArticleManagement extends Component
     {
         $this->validate();
 
-        $imagePath = $this->image ? $this->image->store('articles', 'public') : null;
+        $imagePath = null;
+        if ($this->image) {
+            $imagePath = $this->image->store('articles', 'public');
+        }
 
         $article = Article::create([
-            'author_id' => Auth::id(),
             'title' => $this->title,
             'slug' => Str::slug($this->title),
             'content' => $this->content,
             'status' => $this->status,
             'image' => $imagePath,
-            'published_at' => $this->status === 'published' ? now() : null,
+            'author_id' => Auth::id(),
         ]);
 
-        // Attach categories
         if (!empty($this->selectedCategories)) {
-            $article->articleCategories()->sync($this->selectedCategories);
+            $article->categories()->sync($this->selectedCategories);
         }
 
-        $this->reset([
-            'title', 'content', 'status', 'image', 'selectedCategories'
-        ]);
-
-        session()->flash('message', 'Article successfully added.');
+        session()->flash('message', 'Article created successfully!');
+        $this->reset();
+        $this->showForm = false;
     }
 
     public function edit($id)
     {
-        $this->isEditing = true;
+        $article = Article::with('categories')->findOrFail($id);
+        
         $this->article_id = $id;
-        $article = Article::findOrFail($id);
-
         $this->title = $article->title;
         $this->content = $article->content;
         $this->status = $article->status;
-        $this->selectedCategories = $article->articleCategories->pluck('id')->toArray();
+        $this->selectedCategories = $article->categories->pluck('id')->toArray();
+        
+        $this->isEditing = true;
+        $this->showForm = true;
     }
 
     public function update()
@@ -98,10 +125,12 @@ class ArticleManagement extends Component
 
         $article = Article::findOrFail($this->article_id);
 
-        // Handle image upload if a new image is provided
+        $imagePath = $article->image;
         if ($this->image) {
+            if ($article->image) {
+                Storage::disk('public')->delete($article->image);
+            }
             $imagePath = $this->image->store('articles', 'public');
-            $article->image = $imagePath;
         }
 
         $article->update([
@@ -109,18 +138,16 @@ class ArticleManagement extends Component
             'slug' => Str::slug($this->title),
             'content' => $this->content,
             'status' => $this->status,
-            'published_at' => $this->status === 'published' ? now() : null,
+            'image' => $imagePath,
         ]);
 
-        // Sync categories
-        $article->articleCategories()->sync($this->selectedCategories);
+        if (!empty($this->selectedCategories)) {
+            $article->categories()->sync($this->selectedCategories);
+        }
 
-        $this->reset([
-            'title', 'content', 'status', 'image', 'selectedCategories', 
-            'isEditing', 'article_id'
-        ]);
-
-        session()->flash('message', 'Article successfully updated.');
+        session()->flash('message', 'Article updated successfully!');
+        $this->reset();
+        $this->showForm = false;
     }
 
     public function confirmDelete($id)
@@ -132,17 +159,21 @@ class ArticleManagement extends Component
     public function delete()
     {
         $article = Article::findOrFail($this->article_id);
+        
+        if ($article->image) {
+            Storage::disk('public')->delete($article->image);
+        }
+        
+        $article->categories()->detach();
         $article->delete();
-
-        $this->reset(['showDeleteModal', 'article_id']);
-        session()->flash('message', 'Article successfully deleted.');
+        
+        session()->flash('message', 'Article deleted successfully!');
+        $this->showDeleteModal = false;
     }
 
-    public function cancel()
+    public function resetForm()
     {
-        $this->reset([
-            'title', 'content', 'status', 'image', 'selectedCategories', 
-            'isEditing', 'article_id', 'showDeleteModal'
-        ]);
+        $this->reset();
+        $this->resetValidation();
     }
 }

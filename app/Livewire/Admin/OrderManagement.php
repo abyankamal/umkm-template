@@ -12,47 +12,96 @@ class OrderManagement extends Component
 {
     use WithPagination;
 
-    public $selectedStatus = null;
-    public $searchTerm = '';
+    // Filter and Search
+    public $search = '';
+    public $statusFilter = '';
+    public $dateFilter = '';
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
+
+    // UI State
+    public $showDetailsModal = false;
+    public $selectedOrder = null;
+    public $statuses = []; // Added missing property
 
     protected $queryString = [
-        'selectedStatus' => ['except' => ''],
-        'searchTerm' => ['except' => ''],
+        'statusFilter' => ['except' => ''],
+        'search' => ['except' => ''],
+        'dateFilter' => ['except' => ''],
     ];
+
+    public function mount()
+    {
+        $this->statuses = ['pending', 'processing', 'completed', 'cancelled'];
+    }
 
     public function render()
     {
         $query = Order::with(['user', 'orderItems.productVariant'])
-            ->when($this->selectedStatus, function ($query) {
-                return $query->where('status', $this->selectedStatus);
+            ->when($this->search, function ($query) {
+                return $query->where(function($q) {
+                    $q->whereHas('user', function ($subQ) {
+                        $subQ->where('name', 'like', '%' . $this->search . '%')
+                            ->orWhere('email', 'like', '%' . $this->search . '%');
+                    })
+                    ->orWhere('id', 'like', '%' . $this->search . '%')
+                    ->orWhere('total_amount', 'like', '%' . $this->search . '%');
+                });
             })
-            ->when($this->searchTerm, function ($query) {
-                return $query->whereHas('user', function ($q) {
-                    $q->where('name', 'like', '%' . $this->searchTerm . '%')
-                      ->orWhere('email', 'like', '%' . $this->searchTerm . '%');
-                })->orWhere('id', 'like', '%' . $this->searchTerm . '%');
+            ->when($this->statusFilter, function ($query) {
+                return $query->where('status', $this->statusFilter);
             })
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->when($this->dateFilter, function ($query) {
+                return match($this->dateFilter) {
+                    'today' => $query->whereDate('created_at', today()),
+                    'week' => $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]),
+                    'month' => $query->whereMonth('created_at', now()->month),
+                    default => $query
+                };
+            })
+            ->orderBy($this->sortField, $this->sortDirection);
 
         return view('livewire.admin.order-management', [
-            'orders' => $query,
-            'statuses' => ['pending', 'processing', 'completed', 'cancelled']
+            'orders' => $query->paginate(10),
+            'statuses' => $this->statuses
         ]);
     }
 
     public function updateOrderStatus($orderId, $status)
     {
         $order = Order::findOrFail($orderId);
+        $oldStatus = $order->status;
+        
         $order->update(['status' => $status]);
-        session()->flash('message', "Order #$orderId status updated to $status.");
+        
+        session()->flash('message', "Order #$orderId status updated from $oldStatus to $status");
     }
 
     public function viewOrderDetails($orderId)
     {
-        $order = Order::with(['user', 'orderItems.productVariant', 'payment'])
+        $this->selectedOrder = Order::with(['user', 'orderItems.productVariant', 'payment', 'shipment'])
             ->findOrFail($orderId);
-        
-        $this->dispatch('show-order-details', $order);
+        $this->showDetailsModal = true;
+    }
+
+    public function closeDetailsModal()
+    {
+        $this->showDetailsModal = false;
+        $this->selectedOrder = null;
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+    }
+
+    public function resetFilters()
+    {
+        $this->reset(['search', 'statusFilter', 'dateFilter']);
     }
 }
