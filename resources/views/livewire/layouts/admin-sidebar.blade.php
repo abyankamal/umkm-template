@@ -24,9 +24,9 @@
                         <span class="ml-3">Pesanan</span>
                     </a>
                 </li>
-                <li class="mb-2">
+                <li class="mb-2 hover:text-white">
                     <a wire:navigate href="{{ route('admin.articles') }}" class="flex items-center space-x-2 py-2 px-4 rounded-lg text-gray-700 hover:bg-kutamis-purple hover:text-white {{ request()->routeIs('admin.articles') ? 'bg-kutamis-purple text-white' : '' }}">
-                        <i class="fas fa-newspaper {{ request()->routeIs('admin.articles') ? 'text-white' : 'text-gray-500' }}"></i>
+                        <i class="fas fa-newspaper hover:text-white {{ request()->routeIs('admin.articles') ? 'text-white' : 'text-gray-500' }}"></i>
                         <span class="ml-3">Artikel</span>
                     </a>
                 </li>
