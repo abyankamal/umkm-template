@@ -17,6 +17,7 @@
         <!-- Main Content -->
         <div class="flex-1">
             <!-- Header -->
+            <livewire:layouts.admin-header />
 
             <!-- Page Content -->
             <main class="p-6 flex-grow">
