@@ -4,32 +4,41 @@
             <img src="{{ asset('logo.png') }}" alt="Logo" class="h-12">
         </div>
 
-        <nav class="space-y-2">
+        <nav class="space-y-2 overflow-y-auto">
             <ul>
-                <li class="mb-2">
-                    <a wire:navigate href="{{ route('admin.dashboard') }}" class="flex items-center space-x-2 py-2 px-4 rounded-lg text-gray-700 hover:bg-kutamis-purple hover:text-white {{ request()->routeIs('admin.dashboard') ? 'bg-kutamis-purple text-white' : '' }}">
-                        <i class="fas fa-tachometer-alt {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-gray-500' }}"></i>
-                        <span class="ml-3">Dashboard</span>
-                    </a>
-                </li>
-                <li class="mb-2">
-                    <a wire:navigate href="{{ route('admin.products') }}" class="flex items-center space-x-2 py-2 px-4 rounded-lg text-gray-700 hover:bg-kutamis-purple hover:text-white {{ request()->routeIs('admin.products') ? 'bg-kutamis-purple text-white' : '' }}">
-                        <i class="fas fa-box {{ request()->routeIs('admin.products') ? 'text-white' : 'text-gray-500' }}"></i>
-                        <span class="ml-3">Produk</span>
-                    </a>
-                </li>
-                <li class="mb-2">
-                    <a wire:navigate href="{{ route('admin.orders') }}" class="flex items-center space-x-2 py-2 px-4 rounded-lg text-gray-700 hover:bg-kutamis-purple hover:text-white {{ request()->routeIs('admin.orders') ? 'bg-kutamis-purple text-white' : '' }}">
-                        <i class="fas fa-shopping-cart {{ request()->routeIs('admin.orders') ? 'text-white' : 'text-gray-500' }}"></i>
-                        <span class="ml-3">Pesanan</span>
-                    </a>
-                </li>
-                <li class="mb-2 hover:text-white">
-                    <a wire:navigate href="{{ route('admin.articles') }}" class="flex items-center space-x-2 py-2 px-4 rounded-lg text-gray-700 hover:bg-kutamis-purple hover:text-white {{ request()->routeIs('admin.articles') ? 'bg-kutamis-purple text-white' : '' }}">
-                        <i class="fas fa-newspaper hover:text-white {{ request()->routeIs('admin.articles') ? 'text-white' : 'text-gray-500' }}"></i>
-                        <span class="ml-3">Artikel</span>
-                    </a>
-                </li>
+                @php
+                    $menuItems = [
+                        [
+                            'route' => 'admin.dashboard',
+                            'icon' => 'fas fa-tachometer-alt',
+                            'label' => 'Dashboard',
+                        ],
+                        [
+                            'route' => 'admin.products',
+                            'icon' => 'fas fa-box',
+                            'label' => 'Produk',
+                        ],
+                        [
+                            'route' => 'admin.orders',
+                            'icon' => 'fas fa-shopping-cart',
+                            'label' => 'Pesanan',
+                        ],
+                        [
+                            'route' => 'admin.articles',
+                            'icon' => 'fas fa-newspaper',
+                            'label' => 'Artikel',
+                        ],
+                    ];
+                @endphp
+
+                @foreach ($menuItems as $item)
+                    <li class="mb-2">
+                        <a wire:navigate href="{{ route($item['route']) }}" class="flex items-center space-x-2 py-2 px-4 rounded-lg {{ request()->routeIs($item['route']) ? 'bg-kutamis-purple text-white' : 'text-gray-700 hover:bg-kutamis-purple hover:text-white' }}">
+                            <i class="{{ $item['icon'] }} {{ request()->routeIs($item['route']) ? 'text-white' : 'text-gray-500 hover:text-white' }}"></i>
+                            <span class="ml-3">{{ $item['label'] }}</span>
+                        </a>
+                    </li>
+                @endforeach
             </ul>
         </nav>
     </div>
