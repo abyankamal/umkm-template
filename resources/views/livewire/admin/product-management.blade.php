@@ -2,6 +2,7 @@
     <div class="p-4 bg-white rounded-lg shadow-xs">
         <div class="mb-4">
             <h2 class="text-2xl font-semibold">Manage Products</h2>
+            <script>document.title = 'Manage Products - UMKM Template';</script>
         </div>
 
         @if (session()->has('message'))
