@@ -15,12 +15,12 @@
         <livewire:layouts.admin-sidebar />
 
         <!-- Main Content -->
-        <div class="flex-1">
+        <div class="flex-1 flex flex-col h-screen overflow-hidden">
             <!-- Header -->
             <livewire:layouts.admin-header />
 
             <!-- Page Content -->
-            <main class="p-6 flex-grow">
+            <main class="flex-1 overflow-y-auto p-6">
                 {{ $slot }}
             </main>
 
