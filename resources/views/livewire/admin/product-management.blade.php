@@ -114,4 +114,152 @@
             </div>
         </div>
     @endif
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Tree Menu Sidebar -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Kategori Produk</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-end mb-3">
+                            <button wire:click="openCategoryModal" class="btn btn-sm btn-primary">
+                                <i class="fas fa-plus"></i> Tambah Kategori
+                            </button>
+                        </div>
+                        <div class="category-tree">
+                            @foreach($categories as $category)
+                                <div class="category-item">
+                                    <div class="d-flex justify-content-between align-items-center py-2">
+                                        <span wire:click="selectCategory({{ $category->id }})" class="cursor-pointer {{ $selectedCategory && $selectedCategory->id === $category->id ? 'text-primary font-weight-bold' : '' }}">
+                                            <i class="fas fa-folder"></i> {{ $category->name }}
+                                        </span>
+                                        <div class="btn-group">
+                                            <button wire:click="editCategory({{ $category->id }})" class="btn btn-sm btn-info">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button wire:click="deleteCategory({{ $category->id }})" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                @if($selectedCategory)
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Varian Produk</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-end mb-3">
+                            <button wire:click="openVariantModal" class="btn btn-sm btn-primary">
+                                <i class="fas fa-plus"></i> Tambah Varian
+                            </button>
+                        </div>
+                        <div class="variant-list">
+                            @foreach($variants as $variant)
+                                <div class="variant-item">
+                                    <div class="d-flex justify-content-between align-items-center py-2">
+                                        <span>
+                                            <i class="fas fa-tag"></i> {{ $variant->name }}
+                                        </span>
+                                        <div class="btn-group">
+                                            <button wire:click="editVariant({{ $variant->id }})" class="btn btn-sm btn-info">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button wire:click="deleteVariant({{ $variant->id }})" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @endif
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Daftar Produk {{ $selectedCategory ? 'dalam ' . $selectedCategory->name : '' }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Product list will go here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Modal -->
+        <div class="modal fade" id="categoryModal" tabindex="-1" wire:ignore.self>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ $editingCategory ? 'Edit Kategori' : 'Tambah Kategori Baru' }}</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form wire:submit.prevent="saveCategory">
+                            <div class="form-group">
+                                <label>Nama Kategori</label>
+                                <input type="text" class="form-control" wire:model="categoryForm.name">
+                                @error('categoryForm.name') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group">
+                                <label>Deskripsi</label>
+                                <textarea class="form-control" wire:model="categoryForm.description"></textarea>
+                                @error('categoryForm.description') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Variant Modal -->
+        <div class="modal fade" id="variantModal" tabindex="-1" wire:ignore.self>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ $editingVariant ? 'Edit Varian' : 'Tambah Varian Baru' }}</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form wire:submit.prevent="saveVariant">
+                            <div class="form-group">
+                                <label>Nama Varian</label>
+                                <input type="text" class="form-control" wire:model="variantForm.name">
+                                @error('variantForm.name') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group">
+                                <label>Harga</label>
+                                <input type="number" class="form-control" wire:model="variantForm.price">
+                                @error('variantForm.price') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group">
+                                <label>Stok</label>
+                                <input type="number" class="form-control" wire:model="variantForm.stock">
+                                @error('variantForm.stock') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
