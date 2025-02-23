@@ -37,6 +37,28 @@
                             ]
                         ],
                         [
+                            'route' => 'admin.articles',
+                            'icon' => 'fas fa-newspaper',
+                            'label' => 'Artikel',
+                            'children' => [
+                                [
+                                    'route' => 'admin.articles.list',
+                                    'icon' => 'fas fa-list',
+                                    'label' => 'Daftar Artikel'
+                                ],
+                                [
+                                    'route' => 'admin.articles.categories',
+                                    'icon' => 'fas fa-folder',
+                                    'label' => 'Kategori Artikel'
+                                ],
+                                [
+                                    'route' => 'admin.articles.related-products',
+                                    'icon' => 'fas fa-link',
+                                    'label' => 'Produk Terkait'
+                                ]
+                            ]
+                        ],
+                        [
                             'route' => 'admin.orders',
                             'icon' => 'fas fa-shopping-cart',
                             'label' => 'Pesanan',

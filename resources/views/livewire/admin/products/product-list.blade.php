@@ -1,4 +1,5 @@
 <div>
+<script>document.title = 'Manage Products';</script>
     {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
     <div class="container px-6 mx-auto">
         <!-- Header -->
@@ -6,7 +7,7 @@
             <h2 class="my-6 text-2xl font-semibold text-gray-700">
                 Products Management
             </h2>
-            <button wire:click="create" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+            <button wire:click="create" class="bg-kutamis-purple text-white px-4 py-2 rounded-lg hover:bg-blue-600">
                 Add New Product
             </button>
         </div>
