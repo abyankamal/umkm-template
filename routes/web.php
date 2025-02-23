@@ -2,6 +2,7 @@
 
 use App\Livewire\Admin\Products\ProductCategory;
 use App\Livewire\Admin\Products\ProductList;
+use App\Livewire\Admin\Products\ProductVariant;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -15,7 +16,7 @@ Route::prefix('admin')->group(function () {
     Route::prefix('products')->group(function () {
         Route::get('/', ProductList::class)->name('admin.products.list');
         Route::get('/categories', ProductCategory::class)->name('admin.products.categories');
-        // Route::get('/variants', \App\Http\Livewire\Admin\Products\VariantIndex::class)->name('admin.products.variants');
+        Route::get('/variants', ProductVariant::class)->name('admin.products.variants');
     });
 
     Route::get('/articles', \App\Livewire\Admin\ArticleManagement::class)->name('admin.articles');
