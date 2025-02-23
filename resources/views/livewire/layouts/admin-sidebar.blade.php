@@ -64,12 +64,6 @@
                             'label' => 'Pesanan',
                             'children' => []
                         ],
-                        [
-                            'route' => 'admin.articles',
-                            'icon' => 'fas fa-newspaper',
-                            'label' => 'Artikel',
-                            'children' => []
-                        ],
                     ];
                 @endphp
 
