@@ -1,5 +1,3 @@
-<?php
-{{ ... }}
 <div>
     <div class="container mx-auto py-6">
         <div class="flex justify-between items-center mb-6">

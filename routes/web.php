@@ -1,7 +1,6 @@
 <?php
 
-use App\Livewire\Admin\Categories\CategoryList;
-use App\Livewire\Admin\Categories\ProductCategory;
+use App\Livewire\Admin\Products\ProductCategory;
 use App\Livewire\Admin\Products\ProductList;
 use App\Livewire\Admin\Products\ProductVariant;
 use Illuminate\Support\Facades\Route;

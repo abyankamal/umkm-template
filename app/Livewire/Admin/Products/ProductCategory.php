@@ -13,10 +13,10 @@ class ProductCategory extends Component
 {
     use WithPagination;
 
-    #[Rule('required|string|max:255')]
+    #[Rule('required|string|max:255', 'The name field is required and must be a string with a maximum length of 255.')] 
     public $name = '';
 
-    #[Rule('nullable|string')]
+    #[Rule('nullable|string', 'The description must be a string.')] 
     public $description = '';
 
     public $search = '';
