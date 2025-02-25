@@ -34,6 +34,7 @@ class ProductCategory extends Component
     public function resetForm()
     {
         $this->reset(['name', 'description', 'categoryId', 'editMode']);
+        $this->resetValidation(); 
         $this->showModal = false;
     }
 
