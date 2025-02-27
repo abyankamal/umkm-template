@@ -7,11 +7,12 @@ use App\Models\ArticleCategory as Category; // Assuming you have a model for Art
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Layout;
+use Livewire\WithPagination;
 
 #[Layout('livewire.layouts.admin-layout')]
 class ArticleCategory extends Component
 {
-    use WithFileUploads;
+    use WithPagination;
 
     public $categories;
     public $categoryId;
