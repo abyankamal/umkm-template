@@ -7,6 +7,7 @@ use App\Models\ArticleCategory as Category; // Assuming you have a model for Art
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Rule;
 use Livewire\WithPagination;
 
 #[Layout('livewire.layouts.admin-layout')]
@@ -16,7 +17,9 @@ class ArticleCategory extends Component
 
     public $categories;
     public $categoryId;
-    public $categoryName;
+
+    #[Rule('required|string|max:255|unique:article_categories,name')]
+    public $categoryName = '';
 
     protected $rules = [
         'categoryName' => 'required|string|max:255',
