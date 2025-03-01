@@ -76,7 +76,6 @@
                                     href="{{ route($item['route']) }}"
                                 @else
                                     @click="open = !open"
-                                    href="#"
                                 @endif
                                 class="flex items-center justify-between py-2 px-4 rounded-lg {{ request()->routeIs($item['route'] . '*') ? 'bg-kutamis-purple text-white' : 'text-gray-700 hover:bg-kutamis-purple hover:text-white' }}"
                             >
