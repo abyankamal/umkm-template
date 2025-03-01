@@ -4,7 +4,7 @@ namespace App\Livewire\Admin\Articles;
 
 use Livewire\Component;
 
-class ArticlesList extends Component
+class ArticleList extends Component
 {
     public function render()
     {

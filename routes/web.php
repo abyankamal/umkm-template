@@ -1,5 +1,8 @@
 <?php
 
+use App\Livewire\Admin\Articles\ArticleCategory;
+use App\Livewire\Admin\Articles\ArticleList;
+use App\Livewire\Admin\Articles\ArticleRelateProduct;
 use App\Livewire\Admin\Products\ProductCategory;
 use App\Livewire\Admin\Products\ProductList;
 use App\Livewire\Admin\Products\ProductVariant;
@@ -19,6 +22,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/variants', ProductVariant::class)->name('admin.products.variants');
     });
 
-    Route::get('/articles', \App\Livewire\Admin\ArticleManagement::class)->name('admin.articles');
+    Route::prefix('articles')->group(function () {
+        Route::get('/', ArticleList::class)->name('admin.articles.list');
+        Route::get('/categories', ArticleCategory::class)->name('admin.articles.categories');
+        Route::get('/related-products', ArticleRelateProduct::class)->name('admin.articles.related-products');
+    });
+
     Route::get('/orders', \App\Livewire\Admin\OrderManagement::class)->name('admin.orders');
 });
