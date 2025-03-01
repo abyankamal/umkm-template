@@ -4,11 +4,11 @@ namespace App\Livewire\Admin\Articles;
 
 use Livewire\Component;
 use App\Models\ArticleCategory as Category; // Assuming you have a model for ArticleCategory
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
 
 #[Layout('livewire.layouts.admin-layout')]
 class ArticleCategory extends Component
@@ -16,6 +16,7 @@ class ArticleCategory extends Component
     use WithPagination;
 
     public $categories;
+
     public $categoryId;
 
     #[Rule('required|string|max:255|unique:article_categories,name')]
@@ -36,12 +37,15 @@ class ArticleCategory extends Component
     }
 
     public function createCategory()
-    {
-        $this->validate();
-        Category::create(['name' => $this->categoryName]);
-        $this->reset('categoryName');
-        $this->loadCategories();
-    }
+{
+    $this->validate();
+    Category::create([
+        'name' => $this->categoryName,
+        'slug' => Str::slug($this->categoryName), // Generate slug
+    ]);
+    $this->reset('categoryName');
+    $this->loadCategories();
+}
 
     public function editCategory($id)
     {
@@ -51,13 +55,16 @@ class ArticleCategory extends Component
     }
 
     public function updateCategory()
-    {
-        $this->validate();
-        $category = Category::find($this->categoryId);
-        $category->update(['name' => $this->categoryName]);
-        $this->reset('categoryName', 'categoryId');
-        $this->loadCategories();
-    }
+{
+    $this->validate();
+    $category = Category::find($this->categoryId);
+    $category->update([
+        'name' => $this->categoryName,
+        'slug' => Str::slug($this->categoryName), // Update slug
+    ]);
+    $this->reset('categoryName', 'categoryId');
+    $this->loadCategories();
+}
 
     public function deleteCategory($id)
     {
