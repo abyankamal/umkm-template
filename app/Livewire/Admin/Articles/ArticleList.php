@@ -9,6 +9,7 @@ use Livewire\Attributes\Rule;
 class ArticleList extends Component
 {
     public $articles = []; // To hold articles
+    public $searchTerm;
     
     #[Rule('required|string|max:255|unique:articles,title')]
     public $title = ''; // For the article title
@@ -18,7 +19,8 @@ class ArticleList extends Component
 
     public function mount()
     {
-        $this->articles = Article::all(); // Fetch all articles
+        $this->searchTerm = '';
+        $this->articles = $this->searchArticles(); // Fetch all articles
     }
 
     public function createArticle()
@@ -49,8 +51,16 @@ class ArticleList extends Component
         $this->articleId = null;
     }
 
+    public function searchArticles()
+    {
+        return Article::where('title', 'like', '%' . $this->searchTerm . '%')
+                       ->orWhere('content', 'like', '%' . $this->searchTerm . '%')
+                       ->get();
+    }
+
     public function render()
     {
-        return view('livewire.admin.articles.articles-list', ['articles' => $this->articles]);
+        $articles = $this->searchArticles();
+        return view('livewire.admin.articles.articles-list', compact('articles'));
     }
 }
