@@ -53,8 +53,8 @@ class ArticleList extends Component
 
     public function searchArticles()
     {
-        return Article::where('title', 'like', '%' . $this->searchTerm . '%')
-                       ->orWhere('content', 'like', '%' . $this->searchTerm . '%')
+        return Article::where('title', 'like', "%{$this->searchTerm}%")
+                       ->orWhere('content', 'like', "%{$this->searchTerm}%")
                        ->get();
     }
 
