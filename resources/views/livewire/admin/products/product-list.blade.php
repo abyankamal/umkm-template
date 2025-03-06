@@ -1,4 +1,4 @@
-<div>
+<div class="rounded overflow-hidden shadow-lg bg-white">
 <script>document.title = 'Manage Products';</script>
     {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
     <div class="container px-6 mx-auto">

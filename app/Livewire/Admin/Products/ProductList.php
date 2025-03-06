@@ -14,6 +14,8 @@ class ProductList extends Component
 {
     use WithPagination;
 
+    public $menutitle = 'Manage Products';
+
     // Form Properties
     #[Rule('required|string|max:255')]
     public $name = '';
