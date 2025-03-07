@@ -14,7 +14,7 @@ class ProductList extends Component
 {
     use WithPagination;
 
-    public $menutitle = 'Manage Products';
+    public $menutitle;
 
     // Form Properties
     #[Rule('required|string|max:255')]
@@ -43,6 +43,7 @@ class ProductList extends Component
 
     public function mount()
     {
+        $this->menutitle = 'Manage Products';
         $this->resetForm();
     }
 
