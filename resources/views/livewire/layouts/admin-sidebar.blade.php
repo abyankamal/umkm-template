@@ -22,7 +22,7 @@
                                 [
                                     'route' => 'admin.products.list',
                                     'icon' => 'fas fa-list',
-                                    'label' => 'Daftar Produk'
+                                    'label' => 'Daftar Produk',
                                 ],
                                 [
                                     'route' => 'admin.products.categories',
@@ -72,19 +72,19 @@
                         <div x-data="{ open: {{ request()->routeIs($item['route'] . '*') ? 'true' : 'false' }} }">
                             <a 
                                 @if(empty($item['children']))
-                                    wire:navigate 
+                                    wire:navigate
                                     href="{{ route($item['route']) }}"
                                 @else
                                     @click="open = !open"
                                 @endif
-                                class="flex items-center justify-between py-2 px-4 rounded-lg {{ request()->routeIs($item['route'] . '*') ? 'bg-kutamis-purple text-white' : 'text-gray-700 hover:bg-kutamis-purple hover:text-white' }}"
+                                class="group flex items-center justify-between py-2 px-4 rounded-lg {{ request()->routeIs($item['route'] . '*') ? 'bg-kutamis-purple text-white' : 'text-gray-700 hover:bg-kutamis-purple hover:text-white' }}"
                             >
                                 <div class="flex items-center">
                                     <i class="{{ $item['icon'] }} {{ request()->routeIs($item['route'] . '*') ? 'text-white' : 'text-gray-500 group-hover:text-white' }}"></i>
-                                    <span class="ml-3">{{ $item['label'] }}</span>
+                                    <span class="ml-3 group-hover:text-white">{{ $item['label'] }}</span>
                                 </div>
                                 @if(!empty($item['children']))
-                                    <i class="fas" :class="open ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+                                    <i class="fas {{ request()->routeIs($item['route'] . '*') ? 'text-white' : 'text-gray-500 group-hover:text-white' }}" :class="open ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
                                 @endif
                             </a>
                             
@@ -94,10 +94,10 @@
                                         <a 
                                             wire:navigate 
                                             href="{{ route($child['route']) }}"
-                                            class="flex items-center py-2 px-4 rounded-lg {{ request()->routeIs($child['route']) ? 'bg-kutamis-purple text-white' : 'text-gray-700 hover:bg-kutamis-purple hover:text-white' }}"
+                                            class="group flex items-center py-2 px-4 rounded-lg {{ request()->routeIs($child['route']) ? 'bg-kutamis-purple text-white' : 'text-gray-700 hover:bg-kutamis-purple hover:text-white' }}"
                                         >
                                             <i class="{{ $child['icon'] }} {{ request()->routeIs($child['route']) ? 'text-white' : 'text-gray-500 group-hover:text-white' }}"></i>
-                                            <span class="ml-3">{{ $child['label'] }}</span>
+                                            <span class="ml-3 group-hover:text-white">{{ $child['label'] }}</span>
                                         </a>
                                     @endforeach
                                 </div>

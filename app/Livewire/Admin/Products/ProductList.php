@@ -47,6 +47,11 @@ class ProductList extends Component
         $this->resetForm();
     }
 
+    public function setMenuTitle($title)
+    {
+        $this->menutitle = $title;
+    }
+
     public function resetForm()
     {
         $this->reset(['name', 'price', 'stock', 'category_id', 'description', 'productId', 'editMode']);

@@ -1,6 +1,5 @@
 <header class="bg-white shadow sticky top-0 z-10">
     <div class="flex justify-between items-center px-6 py-4">
-        <h2 class="text-xl font-semibold text-gray-800">{{ $menutitle ?? 'Dashboard' }}</h2>
 
         @if(Auth::check())
             <div class="relative">
