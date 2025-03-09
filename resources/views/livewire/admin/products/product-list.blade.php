@@ -1,11 +1,11 @@
 <div class="rounded overflow-hidden shadow-lg bg-white">
-<script>document.title = 'Manage Products';</script>
+<script>document.title = 'Manajemen Produk';</script>
     {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
     <div class="container px-6 mx-auto">
         <!-- Header -->
         <div class="flex justify-between items-center">
             <h2 class="my-6 text-2xl font-semibold text-gray-700">
-                Products Management
+                Manajemen Produk
             </h2>
             <button wire:click="create" class="bg-kutamis-purple text-white px-4 py-2 rounded-lg hover:bg-blue-600">
                 Add New Product
