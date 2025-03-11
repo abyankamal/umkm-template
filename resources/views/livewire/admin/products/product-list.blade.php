@@ -7,8 +7,8 @@
             <h2 class="my-6 text-2xl font-semibold text-gray-700">
                 Manajemen Produk
             </h2>
-            <button wire:click="create" class="bg-kutamis-purple text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-                Add New Product
+            <button wire:click="create" class="bg-kutamis-purple text-white px-4 py-2 rounded-lg hover:bg-kutamis-purple-hover">
+                Tambah Produk Baru
             </button>
         </div>
 
@@ -16,12 +16,12 @@
         <div class="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <input wire:model.live="search" type="text" placeholder="Search products..."
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-kutamis-purple">
             </div>
             <div>
                 <select wire:model.live="categoryFilter"
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
-                    <option value="">All Categories</option>
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-kutamis-purple">
+                    <option value="" class="bg-kutamis-purple">All Categories</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
@@ -35,33 +35,43 @@
                 <table class="w-full whitespace-no-wrap">
                     <thead>
                         <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
-                            <th wire:click="sortBy('name')" class="px-4 py-3 cursor-pointer">Name</th>
-                            <th wire:click="sortBy('category_id')" class="px-4 py-3 cursor-pointer">Category</th>
-                            <th wire:click="sortBy('price')" class="px-4 py-3 cursor-pointer">Price</th>
-                            <th wire:click="sortBy('stock')" class="px-4 py-3 cursor-pointer">Stock</th>
-                            <th class="px-4 py-3">Actions</th>
+                            <th class="px-4 py-3 cursor-pointer">No</th>
+                            <th wire:click="sortBy('name')" class="px-4 py-3 cursor-pointer">Nama Produk</th>
+                            <th wire:click="sortBy('category_id')" class="px-4 py-3 cursor-pointer">Kategori</th>
+                            <th wire:click="sortBy('price')" class="px-4 py-3 cursor-pointer">Harga</th>
+                            <th wire:click="sortBy('stock')" class="px-4 py-3 cursor-pointer">Jumlah Produk</th>
+                            <th class="px-4 py-3">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y">
-                        @foreach($products as $product)
-                            <tr class="text-gray-700">
-                                <td class="px-4 py-3">{{ $product->name }}</td>
-                                <td class="px-4 py-3">{{ $product->category->name }}</td>
-                                <td class="px-4 py-3">{{ number_format($product->price, 2) }}</td>
-                                <td class="px-4 py-3">{{ $product->stock }}</td>
-                                <td class="px-4 py-3">
-                                    <button wire:click="edit({{ $product->id }})"
-                                        class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full mr-2">
-                                        Edit
-                                    </button>
-                                    <button wire:click="delete({{ $product->id }})"
-                                        onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"
-                                        class="text-sm bg-red-100 text-red-700 px-3 py-1 rounded-full">
-                                        Delete
-                                    </button>
+                        @if($products->isEmpty())
+                            <tr>
+                                <td colspan="6" class="text-center px-4 py-3 text-gray-500">
+                                    Belum Ada Produk
                                 </td>
                             </tr>
-                        @endforeach
+                        @else
+                            @foreach($products as $product)
+                                <tr class="text-gray-700">
+                                    <td class="px-4 py-3">{{ $index + 1 }}</td>
+                                    <td class="px-4 py-3">{{ $product->name }}</td>
+                                    <td class="px-4 py-3">{{ $product->category->name }}</td>
+                                    <td class="px-4 py-3">{{ number_format($product->price, 2) }}</td>
+                                    <td class="px-4 py-3">{{ $product->stock }}</td>
+                                    <td class="px-4 py-3">
+                                        <button wire:click="edit({{ $product->id }})"
+                                            class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full mr-2">
+                                            Edit
+                                        </button>
+                                        <button wire:click="delete({{ $product->id }})"
+                                            onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"
+                                            class="text-sm bg-red-100 text-red-700 px-3 py-1 rounded-full">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -83,7 +93,7 @@
             <form wire:submit="{{ $editMode ? 'update' : 'store' }}">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Name</label>
+                        <label class="block text-sm font-medium text-gray-700">Nama Produk</label>
                         <input type="text" wire:model="name"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                         @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror

@@ -16,6 +16,8 @@ export default {
             },
             colors: {
                 "kutamis-purple": "#4B0433",
+                "kutamis-purple-hover": "#350324",
+                "border-kutamis": "#4B0433",
             },
         },
     },
