@@ -1,136 +1,166 @@
-<div>
-    <div class="container mx-auto py-6">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-semibold">Product Categories</h1>
-            <button wire:click="create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Add Category
-            </button>
-        </div>
-
-        <!-- Search and Filter -->
-        <div class="mb-4">
-            <input wire:model.live="search" type="text" placeholder="Search categories..." 
-                class="w-full md:w-1/3 px-4 py-2 border rounded-lg">
-        </div>
-
-        <!-- Categories Table -->
-        <div class="bg-white rounded-lg shadow overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th wire:click="sortBy('name')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                            Name
-                            @if ($sortField === 'name')
-                                @if ($sortDirection === 'asc')
-                                    ↑
-                                @else
-                                    ↓
-                                @endif
-                            @endif
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Description
-                        </th>
-                        <th wire:click="sortBy('created_at')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                            Created At
-                            @if ($sortField === 'created_at')
-                                @if ($sortDirection === 'asc')
-                                    ↑
-                                @else
-                                    ↓
-                                @endif
-                            @endif
-                        </th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse ($categories as $category)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                {{ $category->name }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $category->description }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                {{ $category->created_at->format('M d, Y') }}
-                            </td>
-                            <td class="px-6 py-4 text-right text-sm font-medium">
-                                <button wire:click="edit({{ $category->id }})" class="text-indigo-600 hover:text-indigo-900">
-                                    Edit
-                                </button>
-                                <button wire:click="delete({{ $category->id }})" class="ml-4 text-red-600 hover:text-red-900">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">
-                                No categories found.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination -->
-        <div class="mt-4">
-            {{ $categories->links() }}
-        </div>
-
-        <!-- Modal Form -->
-        @if($showModal)
-            <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-
-                    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                        <form wire:submit="{{ $editMode ? 'update' : 'store' }}">
-                            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                <div class="mb-4">
-                                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                                    <input type="text" wire:model="name" id="name" 
-                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                    @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                                </div>
-
-                                <div class="mb-4">
-                                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                                    <textarea wire:model="description" id="description" rows="3" 
-                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
-                                        @error('description') 
-                                            <span class="text-red-500 text-xs">{{ $errors->first('description') }}</span>
-                                        @enderror
-                                </div>
-                            </div>
-
-                            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                                    {{ $editMode ? 'Update' : 'Create' }}
-                                </button>
-                                <button type="button" wire:click="resetForm" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+<div class="rounded overflow-hidden shadow-lg bg-white">
+    <script>document.title = 'Manajemen Kategori Produk';</script>
+        {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
+        <div class="container px-6 mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center">
+                <h2 class="my-6 text-2xl font-semibold text-gray-700">
+                    Manajemen Kategori Produk
+                </h2>
+                <button wire:click="create" class="bg-kutamis-purple text-white px-4 py-2 rounded-lg hover:bg-kutamis-purple-hover">
+                    Tambah Kategori Baru
+                </button>
+            </div>
+    
+            <!-- Filters -->
+            <div class="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <input wire:model.live="search" type="text" placeholder="Search products..."
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-kutamis-purple">
+                </div>
+                <div>
+                    <select wire:model.live="categoryFilter"
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-kutamis-purple">
+                        <option value="" class="bg-kutamis-purple">All Categories</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
-        @endif
+    
+            <!-- Products Table -->
+            <div class="w-full overflow-hidden rounded-lg shadow-xs">
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full whitespace-no-wrap">
+                        <thead>
+                            <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
+                                <th class="px-4 py-3 cursor-pointer">No</th>
+                                <th wire:click="sortBy('name')" class="px-4 py-3 cursor-pointer">Nama Produk</th>
+                                <th wire:click="sortBy('category_id')" class="px-4 py-3 cursor-pointer">Kategori</th>
+                                <th wire:click="sortBy('price')" class="px-4 py-3 cursor-pointer">Harga</th>
+                                <th wire:click="sortBy('stock')" class="px-4 py-3 cursor-pointer">Jumlah Produk</th>
+                                <th class="px-4 py-3">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y">
+                            @if($categories->isEmpty())
+                                <tr>
+                                    <td colspan="6" class="text-center px-4 py-3 text-gray-500">
+                                        Belum Ada Produk
+                                    </td>
+                                </tr>
+                            @else
+                                @foreach($categories as $product)
+                                    <tr class="text-gray-700">
+                                        <td class="px-4 py-3">{{ $index + 1 }}</td>
+                                        <td class="px-4 py-3">{{ $product->name }}</td>
+                                        <td class="px-4 py-3">{{ $product->category->name }}</td>
+                                        <td class="px-4 py-3">{{ number_format($product->price, 2) }}</td>
+                                        <td class="px-4 py-3">{{ $product->stock }}</td>
+                                        <td class="px-4 py-3">
+                                            <button wire:click="edit({{ $product->id }})"
+                                                class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full mr-2">
+                                                Edit
+                                            </button>
+                                            <button wire:click="delete({{ $product->id }})"
+                                                onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"
+                                                class="text-sm bg-red-100 text-red-700 px-3 py-1 rounded-full">
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+                <div class="px-4 py-3 border-t">
+                    {{ $categories->links() }}
+                </div>
+            </div>
+        </div>
+    
+        <!-- Modal -->
+        <div class="fixed inset-0 z-30 flex items-center justify-center overflow-auto bg-black bg-opacity-50" x-show="$wire.showModal"
+            x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+            <div class="relative px-6 py-4 bg-white rounded-lg shadow-lg max-w-md w-full mx-4" @click.away="$wire.showModal = false">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                    {{ $editMode ? 'Edit Product' : 'Add New Product' }}
+                </h3>
+                <form wire:submit="{{ $editMode ? 'update' : 'store' }}">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nama Produk</label>
+                            <input type="text" wire:model="name"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+    
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Category</label>
+                            <select wire:model="category_id"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <option value="">Select Category</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('category_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+    
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Price</label>
+                            <input type="number" step="0.01" wire:model="price"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            @error('price') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+    
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Stock</label>
+                            <input type="number" wire:model="stock"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            @error('stock') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+    
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Description</label>
+                            <textarea wire:model="description" rows="3"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                            @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+    
+                    <div class="mt-5 flex justify-end space-x-3">
+                        <button type="button" wire:click="resetForm"
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700">
+                            {{ $editMode ? 'Update' : 'Create' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    
+        <!-- Notifications -->
+        <div x-data="{ show: false, message: '' }"
+            x-on:product-saved.window="show = true; message = $event.detail; setTimeout(() => show = false, 3000)"
+            x-on:product-deleted.window="show = true; message = $event.detail; setTimeout(() => show = false, 3000)"
+            class="fixed bottom-4 right-4">
+            <div x-show="show" x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform translate-y-2"
+                x-transition:enter-end="opacity-100 transform translate-y-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 transform translate-y-0"
+                x-transition:leave-end="opacity-0 transform translate-y-2"
+                class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+                <span x-text="message"></span>
+            </div>
+        </div>
     </div>
-
-    <!-- Flash Messages -->
-    <div x-data="{ show: false, message: '' }" 
-         x-on:category-saved.window="show = true; message = $event.detail; setTimeout(() => show = false, 3000)"
-         x-on:category-deleted.window="show = true; message = $event.detail; setTimeout(() => show = false, 3000)"
-         x-show="show"
-         x-transition
-         class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
-        <span x-text="message"></span>
-    </div>
-</div>
+    
