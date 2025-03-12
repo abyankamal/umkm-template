@@ -36,10 +36,7 @@
                         <thead>
                             <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
                                 <th class="px-4 py-3 cursor-pointer">No</th>
-                                <th wire:click="sortBy('name')" class="px-4 py-3 cursor-pointer">Nama Produk</th>
-                                <th wire:click="sortBy('category_id')" class="px-4 py-3 cursor-pointer">Kategori</th>
-                                <th wire:click="sortBy('price')" class="px-4 py-3 cursor-pointer">Harga</th>
-                                <th wire:click="sortBy('stock')" class="px-4 py-3 cursor-pointer">Jumlah Produk</th>
+                                <th wire:click="sortBy('name')" class="px-4 py-3 cursor-pointer">Nama Kategori</th>
                                 <th class="px-4 py-3">Aksi</th>
                             </tr>
                         </thead>
@@ -47,23 +44,20 @@
                             @if($categories->isEmpty())
                                 <tr>
                                     <td colspan="6" class="text-center px-4 py-3 text-gray-500">
-                                        Belum Ada Produk
+                                        Belum Ada Kategori
                                     </td>
                                 </tr>
                             @else
-                                @foreach($categories as $product)
+                                @foreach($categories as $category)
                                     <tr class="text-gray-700">
                                         <td class="px-4 py-3">{{ $index + 1 }}</td>
-                                        <td class="px-4 py-3">{{ $product->name }}</td>
-                                        <td class="px-4 py-3">{{ $product->category->name }}</td>
-                                        <td class="px-4 py-3">{{ number_format($product->price, 2) }}</td>
-                                        <td class="px-4 py-3">{{ $product->stock }}</td>
+                                        <td class="px-4 py-3">{{ $category->name }}</td>
                                         <td class="px-4 py-3">
-                                            <button wire:click="edit({{ $product->id }})"
+                                            <button wire:click="edit({{ $category->id }})"
                                                 class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full mr-2">
                                                 Edit
                                             </button>
-                                            <button wire:click="delete({{ $product->id }})"
+                                            <button wire:click="delete({{ $category->id }})"
                                                 onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"
                                                 class="text-sm bg-red-100 text-red-700 px-3 py-1 rounded-full">
                                                 Delete
@@ -88,47 +82,21 @@
             x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
             <div class="relative px-6 py-4 bg-white rounded-lg shadow-lg max-w-md w-full mx-4" @click.away="$wire.showModal = false">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">
-                    {{ $editMode ? 'Edit Product' : 'Add New Product' }}
+                    {{ $editMode ? 'Edit Kategori' : 'Tambah Kategori' }}
                 </h3>
                 <form wire:submit="{{ $editMode ? 'update' : 'store' }}">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Nama Produk</label>
+                            <label class="block text-sm font-medium text-gray-700">Nama Kategori</label>
                             <input type="text" wire:model="name"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                class="w-full px-2 py-1 border rounded-lg focus:outline-none focus:border-kutamis-purple" placeholder="Masukan Nama Kategori">
                             @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
     
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Category</label>
-                            <select wire:model="category_id"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                <option value="">Select Category</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('category_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                        </div>
-    
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Price</label>
-                            <input type="number" step="0.01" wire:model="price"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            @error('price') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                        </div>
-    
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Stock</label>
-                            <input type="number" wire:model="stock"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            @error('stock') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                        </div>
-    
-                        <div>
                             <label class="block text-sm font-medium text-gray-700">Description</label>
-                            <textarea wire:model="description" rows="3"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                            <textarea wire:model="description" rows="5"
+                                class="w-full px-2 py-1 border rounded-lg focus:outline-none focus:border-kutamis-purple" placeholder="Masukan Deskripsi Produk"></textarea>
                             @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -139,8 +107,8 @@
                             Cancel
                         </button>
                         <button type="submit"
-                            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700">
-                            {{ $editMode ? 'Update' : 'Create' }}
+                            class="px-4 py-2 text-sm font-medium text-white bg-kutamis-purple border border-transparent rounded-md shadow-sm hover:bg-kutamis-purple-hover">
+                            {{ $editMode ? 'Ubah' : 'Simpan' }}
                         </button>
                     </div>
                 </form>
