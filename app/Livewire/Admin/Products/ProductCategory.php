@@ -16,7 +16,7 @@ class ProductCategory extends Component
     #[Rule('required|string|max:255', 'The name field is required and must be a string with a maximum length of 255.')] 
     public $name = '';
 
-    #[Rule('nullable|string|min:50', 'The description must be a string.')] 
+    #[Rule('nullable|string|min:50', 'description must be a string.')] 
     public $description = '';
 
     public $search = '';

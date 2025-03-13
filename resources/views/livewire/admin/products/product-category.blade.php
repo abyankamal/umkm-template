@@ -15,17 +15,8 @@
             <!-- Filters -->
             <div class="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <input wire:model.live="search" type="text" placeholder="Search products..."
+                    <input wire:model.live="search" type="text" placeholder="Cari Kategori..."
                         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-kutamis-purple">
-                </div>
-                <div>
-                    <select wire:model.live="categoryFilter"
-                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-kutamis-purple">
-                        <option value="" class="bg-kutamis-purple">All Categories</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
                 </div>
             </div>
     
@@ -48,7 +39,7 @@
                                     </td>
                                 </tr>
                             @else
-                                @foreach($categories as $category)
+                                @foreach($categories as $index => $category)
                                     <tr class="text-gray-700">
                                         <td class="px-4 py-3">{{ $index + 1 }}</td>
                                         <td class="px-4 py-3">{{ $category->name }}</td>
