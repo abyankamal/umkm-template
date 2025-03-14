@@ -7,16 +7,19 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Layout;
+use Livewire\WithoutUrlPagination;
 
 #[Layout('livewire.layouts.admin-layout')]
 class ProductCategory extends Component
 {
-    use WithPagination;
+    use WithPagination, WithoutUrlPagination;
 
-    #[Rule('required|string|max:255', 'The name field is required and must be a string with a maximum length of 255.')] 
+    protected $paginationTheme = 'tailwind';
+
+    #[Rule('required|string|max:255', 'The name field is required and must be a string with a maximum length of 255.')]
     public $name = '';
 
-    #[Rule('nullable|string|min:50', 'description must be a string.')] 
+    #[Rule('nullable|string|min:50', 'description must be a string.')]
     public $description = '';
 
     public $search = '';
@@ -26,6 +29,10 @@ class ProductCategory extends Component
     public $editMode = false;
     public $categoryId;
 
+    public $deleteId;
+
+    public $showDeleteModal = false;
+
     public function mount()
     {
         $this->resetForm();
@@ -34,7 +41,7 @@ class ProductCategory extends Component
     public function resetForm()
     {
         $this->reset(['name', 'description', 'categoryId', 'editMode']);
-        $this->resetValidation(); 
+        $this->resetValidation();
         $this->showModal = false;
     }
 
@@ -88,19 +95,31 @@ class ProductCategory extends Component
         }
     }
 
+    public function confirmDelete($id)
+    {
+        $this->deleteId = $id;
+        $this->showDeleteModal = true;
+    }
+
+    public function cancelDelete()
+    {
+        $this->deleteId = null;
+        $this->showDeleteModal = false;
+    }
+
+    public function deleteConfirmed()
+    {
+        $this->delete($this->deleteId);
+        $this->showDeleteModal = false;
+        $this->deleteId = null;
+    }
+
     public function render()
     {
-        $query = Category::query()
-            ->when($this->search, function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('description', 'like', '%' . $this->search . '%');
-            })
-            ->orderBy($this->sortField, $this->sortDirection);
-
-        $categories = $query->paginate(10);
-
         return view('livewire.admin.products.product-category', [
-            'categories' => $categories,
+            'categories' => Category::where('name', 'like', "%{$this->search}%")
+                ->orderBy($this->sortField, $this->sortDirection)
+                ->paginate(10)
         ]);
     }
 }
