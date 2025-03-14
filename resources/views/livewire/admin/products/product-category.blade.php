@@ -80,14 +80,14 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Nama Kategori</label>
-                        <input type="text" wire:model="name"
+                        <input type="text" wire:model.live="name"
                             class="w-full px-2 py-1 border rounded-lg focus:outline-none focus:border-kutamis-purple" placeholder="Masukan Nama Kategori">
                         @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Description</label>
-                        <textarea wire:model="description" rows="5"
+                        <textarea wire:model.live="description" rows="5"
                             class="w-full px-2 py-1 border rounded-lg focus:outline-none focus:border-kutamis-purple" placeholder="Masukan Deskripsi Produk"></textarea>
                         @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
