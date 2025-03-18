@@ -109,9 +109,9 @@
 
     <!-- Notifications -->
     <div x-data="{ show: false, message: '' }"
-        x-on:product-saved.window="show = true; message = $event.detail; setTimeout(() => show = false, 3000)"
-        x-on:product-deleted.window="show = true; message = $event.detail; setTimeout(() => show = false, 3000)"
-        class="fixed bottom-4 right-4">
+        x-on:category-saved.window="show = true; message = $event.detail; setTimeout(() => show = false, 3000)"
+        x-on:category-deleted.window="show = true; message = $event.detail; setTimeout(() => show = false, 3000)"
+        class="fixed bottom-4 right-4 z-50">
         <div x-show="show" x-transition:enter="transition ease-out duration-300"
             x-transition:enter-start="opacity-0 transform translate-y-2"
             x-transition:enter-end="opacity-100 transform translate-y-0"
