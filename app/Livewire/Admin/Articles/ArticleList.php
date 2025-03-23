@@ -16,6 +16,11 @@ class ArticleList extends Component
     #[Rule('required|string')]
     public $content = ''; // For the article content
     public $articleId = null; // To track the article being edited
+    
+    // Add these properties for modals
+    public $showModal = false;
+    public $showDeleteModal = false;
+    public $deleteId = null;
 
     public function mount()
     {
@@ -25,23 +30,57 @@ class ArticleList extends Component
 
     public function createArticle()
     {
+        $this->validate();
+        
         Article::create(['title' => $this->title, 'content' => $this->content]);
         $this->resetFields();
-        $this->mount(); // Refresh the articles list
+        $this->showModal = false;
+        $this->dispatch('article-saved', 'Artikel berhasil disimpan!');
+        $this->articles = $this->searchArticles(); // Refresh the articles list
+    }
+
+    public function editArticle($id)
+    {
+        $article = Article::find($id);
+        $this->articleId = $article->id;
+        $this->title = $article->title;
+        $this->content = $article->content;
+        $this->showModal = true;
     }
 
     public function updateArticle()
     {
+        $this->validate([
+            'title' => 'required|string|max:255|unique:articles,title,'.$this->articleId,
+            'content' => 'required|string',
+        ]);
+        
         $article = Article::find($this->articleId);
         $article->update(['title' => $this->title, 'content' => $this->content]);
         $this->resetFields();
-        $this->mount(); // Refresh the articles list
+        $this->showModal = false;
+        $this->dispatch('article-saved', 'Artikel berhasil diperbarui!');
+        $this->articles = $this->searchArticles(); // Refresh the articles list
     }
 
-    public function deleteArticle($id)
+    public function confirmDelete($id)
     {
-        Article::destroy($id);
-        $this->mount(); // Refresh the articles list
+        $this->deleteId = $id;
+        $this->showDeleteModal = true;
+    }
+
+    public function deleteConfirmed()
+    {
+        Article::destroy($this->deleteId);
+        $this->showDeleteModal = false;
+        $this->dispatch('article-deleted', 'Artikel berhasil dihapus!');
+        $this->articles = $this->searchArticles(); // Refresh the articles list
+    }
+
+    public function cancelDelete()
+    {
+        $this->showDeleteModal = false;
+        $this->deleteId = null;
     }
 
     public function resetFields()
@@ -49,6 +88,7 @@ class ArticleList extends Component
         $this->title = '';
         $this->content = '';
         $this->articleId = null;
+        $this->showModal = true; // Show modal when adding new article
     }
 
     public function searchArticles()
@@ -60,7 +100,7 @@ class ArticleList extends Component
 
     public function render()
     {
-        $articles = $this->searchArticles();
-        return view('livewire.admin.articles.articles-list', compact('articles'));
+        $this->articles = $this->searchArticles();
+        return view('livewire.admin.articles.articles-list');
     }
 }
