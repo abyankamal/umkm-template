@@ -3,8 +3,7 @@
 namespace App\Livewire\Admin\Articles;
 
 use Livewire\Component;
-use App\Models\ArticleCategory as Category; // Assuming you have a model for ArticleCategory
-use Illuminate\Support\Facades\Validator;
+use App\Models\ArticleCategory as Category;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\WithPagination;
@@ -15,65 +14,106 @@ class ArticleCategory extends Component
 {
     use WithPagination;
 
-    public $categories;
-
+    public $search = '';
+    public $showModal = false;
+    public $showDeleteModal = false;
+    public $editMode = false;
     public $categoryId;
+    public $categoryToDelete;
 
-    #[Rule('required|string|max:255|unique:article_categories,name')]
-    public $categoryName = '';
+    #[Rule('required|string|max:255')]
+    public $name;
 
-    protected $rules = [
-        'categoryName' => 'required|string|max:255',
-    ];
+    #[Rule('nullable|string')]
+    public $description;
+
+    protected function rules()
+    {
+        return [
+            'name' => 'required|string|max:255' . ($this->categoryId ? ',name,' . $this->categoryId . ',id' : ''),
+            'description' => 'nullable|string',
+        ];
+    }
 
     public function mount()
     {
-        $this->loadCategories();
+        $this->resetPage();
     }
 
-    public function loadCategories()
+    public function create()
     {
-        $this->categories = Category::all();
+        $this->resetForm();
+        $this->editMode = false;
+        $this->showModal = true;
     }
 
-    public function createCategory()
-{
-    $this->validate();
-    Category::create([
-        'name' => $this->categoryName,
-        'slug' => Str::slug($this->categoryName), // Generate slug
-    ]);
-    $this->reset('categoryName');
-    $this->loadCategories();
-}
-
-    public function editCategory($id)
+    public function edit($id)
     {
         $category = Category::find($id);
         $this->categoryId = $category->id;
-        $this->categoryName = $category->name;
+        $this->name = $category->name;
+        $this->description = $category->description;
+        $this->editMode = true;
+        $this->showModal = true;
     }
 
-    public function updateCategory()
-{
-    $this->validate();
-    $category = Category::find($this->categoryId);
-    $category->update([
-        'name' => $this->categoryName,
-        'slug' => Str::slug($this->categoryName), // Update slug
-    ]);
-    $this->reset('categoryName', 'categoryId');
-    $this->loadCategories();
-}
-
-    public function deleteCategory($id)
+    public function store()
     {
-        Category::destroy($id);
-        $this->loadCategories();
+        $this->validate();
+        Category::create([
+            'name' => $this->name,
+            'description' => $this->description,
+            'slug' => Str::slug($this->name),
+        ]);
+        $this->resetForm();
+        $this->dispatch('category-saved', 'Kategori berhasil ditambahkan');
+    }
+
+    public function update()
+    {
+        $this->validate();
+        $category = Category::find($this->categoryId);
+        $category->update([
+            'name' => $this->name,
+            'description' => $this->description,
+            'slug' => Str::slug($this->name),
+        ]);
+        $this->resetForm();
+        $this->dispatch('category-saved', 'Kategori berhasil diperbarui');
+    }
+
+    public function confirmDelete($id)
+    {
+        $this->categoryToDelete = $id;
+        $this->showDeleteModal = true;
+    }
+
+    public function deleteConfirmed()
+    {
+        Category::destroy($this->categoryToDelete);
+        $this->showDeleteModal = false;
+        $this->dispatch('category-deleted', 'Kategori berhasil dihapus');
+    }
+
+    public function cancelDelete()
+    {
+        $this->showDeleteModal = false;
+        $this->categoryToDelete = null;
+    }
+
+    public function resetForm()
+    {
+        $this->reset(['categoryId', 'name', 'description', 'showModal', 'editMode']);
+        $this->resetValidation();
     }
 
     public function render()
     {
-        return view('livewire.admin.articles.article-category', ['categories' => $this->categories]);
+        $categories = Category::where('name', 'like', '%' . $this->search . '%')
+            ->paginate(10);
+
+        return view('livewire.admin.articles.article-category', [
+            'categories' => $categories
+        ]);
     }
 }
