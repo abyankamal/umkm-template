@@ -1,4 +1,4 @@
-<div class="rounded overflow-hidden shadow-lg bg-white">
+<div class="rounded overflow-hidden shadow-lg bg-white pb-10" x-data="{ showModal: @entangle('showModal'), showDeleteModal: @entangle('showDeleteModal') }">
     <script>
         document.title = 'Manajemen Kategori Produk';
     </script>
@@ -29,7 +29,16 @@
                     <thead>
                         <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
                             <th class="px-4 py-3 cursor-pointer">No</th>
-                            <th wire:click="sortBy('name')" class="px-4 py-3 cursor-pointer">Nama Kategori</th>
+                            <th wire:click="sortBy('name')" class="px-4 py-3 cursor-pointer">
+                                Nama Kategori
+                                @if($sortField === 'name')
+                                @if($sortDirection === 'asc')
+                                <span>↑</span>
+                                @else
+                                <span>↓</span>
+                                @endif
+                                @endif
+                            </th>
                             <th class="px-4 py-3">Aksi</th>
                         </tr>
                     </thead>
@@ -43,7 +52,7 @@
                         @else
                         @foreach($categories as $index => $category)
                         <tr class="text-gray-700">
-                            <td class="px-4 py-3">{{ $index + 1 }}</td>
+                            <td class="px-4 py-3">{{ $loop->iteration }}</td>
                             <td class="px-4 py-3">{{ $category->name }}</td>
                             <td class="px-4 py-3">
                                 <button wire:click="edit({{ $category->id }})"
@@ -60,23 +69,21 @@
                         @endif
                     </tbody>
                 </table>
-                <div class="px-4 py-3 border-t">
-                    {{ $categories->links('vendor.livewire.tailwind') }}
-                </div>
             </div>
+            {{ $categories->links('vendor.livewire.tailwind') }}
         </div>
     </div>
 
     <!-- Modal -->
-    <div class="fixed inset-0 z-30 flex items-center justify-center overflow-auto bg-black bg-opacity-50" x-show="$wire.showModal"
+    <div class="fixed inset-0 z-30 flex items-center justify-center overflow-auto bg-black bg-opacity-50" x-show="showModal"
         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-        <div class="relative px-6 py-4 bg-white rounded-lg shadow-lg max-w-md w-full mx-4" @click.away="$wire.showModal = false">
+        <div class="relative px-6 py-4 bg-white rounded-lg shadow-lg max-w-md w-full mx-4" @click.away="showModal = false">
             <h3 class="text-lg font-medium text-gray-900 mb-4">
                 {{ $editMode ? 'Edit Kategori' : 'Tambah Kategori' }}
             </h3>
-            <form wire:submit="{{ $editMode ? 'update' : 'store' }}">
+            <form wire:submit.prevent="{{ $editMode ? 'update' : 'store' }}">
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Nama Kategori</label>
@@ -124,11 +131,11 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div class="fixed inset-0 z-30 flex items-center justify-center overflow-auto bg-black bg-opacity-50" x-show="$wire.showDeleteModal"
+    <div class="fixed inset-0 z-30 flex items-center justify-center overflow-auto bg-black bg-opacity-50" x-show="showDeleteModal"
         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-        <div class="relative px-6 py-4 bg-white rounded-lg shadow-lg max-w-md w-full mx-4" @click.away="$wire.showDeleteModal = false">
+        <div class="relative px-6 py-4 bg-white rounded-lg shadow-lg max-w-md w-full mx-4" @click.away="showDeleteModal = false">
             <h3 class="text-lg font-medium text-gray-900 mb-4">
                 Konfirmasi Hapus
             </h3>

@@ -7,6 +7,7 @@
     <title>{{ $title ?? 'Admin Dashboard' }} - UMKM Template</title>
     @vite('resources/css/app.css')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @livewireStyles
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
