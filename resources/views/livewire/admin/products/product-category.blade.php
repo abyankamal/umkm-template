@@ -70,7 +70,7 @@
                     </tbody>
                 </table>
             </div>
-            {{ $categories->links('vendor.livewire.tailwind') }}
+            {{ $categories->links() }}
         </div>
     </div>
 

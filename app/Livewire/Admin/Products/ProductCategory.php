@@ -129,11 +129,6 @@ class ProductCategory extends Component
         $this->deleteId = null;
     }
 
-    public function paginationView()
-    {
-        return 'vendor.livewire.tailwind';
-    }
-
     public function render()
     {
         $query = Category::query();
