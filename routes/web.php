@@ -6,6 +6,8 @@ use App\Livewire\Admin\Articles\ArticleRelateProduct;
 use App\Livewire\Admin\Products\ProductCategory;
 use App\Livewire\Admin\Products\ProductList;
 use App\Livewire\Admin\Products\ProductVariant;
+use App\Livewire\Admin\Vouchers\VoucherList;
+use App\Livewire\Admin\Vouchers\VoucherProduct;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,7 +16,7 @@ Route::get('/', function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', \App\Livewire\Admin\Dashboard::class)->name('admin.dashboard');
-    
+
     // Product Management Routes
     Route::prefix('products')->group(function () {
         Route::get('/', ProductList::class)->name('admin.products.list');
@@ -26,6 +28,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/', ArticleList::class)->name('admin.articles.list');
         Route::get('/categories', ArticleCategory::class)->name('admin.articles.categories');
         Route::get('/related-products', ArticleRelateProduct::class)->name('admin.articles.related-products');
+    });
+
+    Route::prefix('vouchers')->group(function () {
+        Route::get('/', VoucherList::class)->name('admin.vouchers.list');
+        Route::get('/products', VoucherProduct::class)->name('admin.vouchers.products');
     });
 
     Route::get('/orders', \App\Livewire\Admin\OrderManagement::class)->name('admin.orders');
